@@ -2,8 +2,6 @@
 
 **Ground Control Station - Serial Telemetry Dashboard**
 
-> 🚧 Under Development - Transforming To-Do List skeleton into UAV telemetry system
-
 [![C++](https://img.shields.io/badge/C++-17-00599C.svg)](https://isocpp.org/)
 [![Qt](https://img.shields.io/badge/Qt-6.x-41CD52.svg)](https://www.qt.io/)
 [![CMake](https://img.shields.io/badge/CMake-3.16+-064F8C.svg)](https://cmake.org/)
@@ -92,7 +90,7 @@ brew install qt cmake
 
 ```bash
 # Clone repository
-git clone https://github.com/[username]/TelemetryDash.git
+git clone https://github.com/nisa-s/TelemetryDash.git
 cd TelemetryDash
 
 # Create build directory
@@ -202,40 +200,6 @@ This project demonstrates key competencies for defense industry applications:
 - Qt Designer for UI layout
 - Custom styling with QSS
 
-## 🗺️ Development Roadmap
-
-### Phase 1: Foundation ✅
-- [x] Repository setup
-- [x] CMake build system
-- [x] Qt project structure (migrated from To-Do List)
-
-### Phase 2: Core Functionality 🚧
-- [ ] QSerialPort integration
-  - [ ] Port enumeration
-  - [ ] Connection management
-  - [ ] Data reception callback
-- [ ] Telemetry parser
-  - [ ] String split by delimiter
-  - [ ] Key-value extraction
-  - [ ] Data validation
-
-### Phase 3: GUI Implementation 📋
-- [ ] Replace "Add Task" section with connection panel
-- [ ] Convert task list to data log console
-- [ ] Add telemetry display widgets (battery bar, LCD numbers)
-- [ ] Apply custom QSS styling
-
-### Phase 4: Enhancement 📋
-- [ ] Connection timeout handling
-- [ ] Auto-reconnect on disconnect
-- [ ] Data logging to CSV file
-- [ ] Configuration save/load (last used port)
-
-### Phase 5: Testing & Polish 📋
-- [ ] Test with real STM32/Arduino hardware
-- [ ] Demo video recording
-- [ ] User documentation
-- [ ] Cross-platform testing (Windows/Linux)
 
 ## 🎓 Academic Context
 
@@ -257,7 +221,7 @@ This project demonstrates key competencies for defense industry applications:
 
 ## 🤝 Related Projects
 
-- **[EagleEye-Distributed-UAV-Vision](https://github.com/[username]/EagleEye-Distributed-UAV-Vision)** - ROS2 vision system (could integrate via ROSBridge)
+- **[EagleEye-Distributed-UAV-Vision](https://github.com/nisa-s/EagleEye-Distributed-UAV-Vision)** - ROS2 vision system (could integrate via ROSBridge)
 
 ## 📝 License
 
@@ -270,7 +234,6 @@ MIT License - see [LICENSE](LICENSE) file
 
 📧 nisssn.03@gmail.com  
 💼 [Nisanur Şen](https://linkedin.com/in/nisanur-şen)  
-🌐 [Portfolio](https://yourwebsite.com)
 
 ## 🙏 Acknowledgments
 
