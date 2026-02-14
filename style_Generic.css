@@ -1,0 +1,159 @@
+* {
+    font: 11pt "Segoe UI", "Calibri", sans-serif;
+}
+
+#TelemetryDashClass {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                stop: 0 #0f172a, stop: 0.5 #1e293b, stop: 1 #0f172a);
+}
+
+    #TelemetryDashClass #TitleBarFrame {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #1e293b, stop: 1 #334155);
+        border: 2px solid #475569;
+    }
+
+    #TelemetryDashClass #AddToDoList {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #1e293b, stop: 1 #334155);
+        border: 2px solid #64748b;
+    }
+
+    #TelemetryDashClass #TitleBarFrame,
+    #TelemetryDashClass #AddToDoList {
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    #TelemetryDashClass #NewTaskText,
+    #TelemetryDashClass #TitleText {
+        font: bold 14pt "Segoe UI", sans-serif;
+        color: #e2e8f0;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+    #TelemetryDashClass #AllNewTasks,
+    #TelemetryDashClass #AllNewTasksContents {
+        border: none;
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #0f172a, stop: 1 #1e293b);
+        border-radius: 8px;
+    }
+
+    #TelemetryDashClass QLineEdit {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #334155, stop: 1 #475569);
+        border: 2px solid #64748b;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font: 11pt "Segoe UI", sans-serif;
+        color: #f8fafc;
+        selection-background-color: #3b82f6;
+    }
+
+    #TelemetryDashClass QLineEdit:focus {
+        border: 2px solid #60a5fa;
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #475569, stop: 1 #64748b);
+        box-shadow: 0 0 8px rgba(96, 165, 250, 0.4);
+    }
+
+    #TelemetryDashClass QComboBox {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #334155, stop: 1 #475569);
+        border: 2px solid #64748b;
+        border-radius: 10px;
+        padding: 8px 12px;
+        font: 11pt "Segoe UI", sans-serif;
+        color: #f8fafc;
+        min-width: 120px;
+    }
+
+    #TelemetryDashClass QComboBox:hover {
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #475569, stop: 1 #64748b);
+        border-color: #60a5fa;
+        box-shadow: 0 0 5px rgba(96, 165, 250, 0.3);
+    }
+
+    #TelemetryDashClass QComboBox::drop-down {
+        border: none;
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #60a5fa, stop: 1 #3b82f6);
+        border-radius: 6px;
+        width: 25px;
+    }
+
+    #TelemetryDashClass QComboBox::down-arrow {
+        image: none;
+        border: 4px solid transparent;
+        border-top: 6px solid #ffffff;
+    }
+
+    #TelemetryDashClass QComboBox QAbstractItemView {
+        background-color: #334155;
+        border: 1px solid #64748b;
+        border-radius: 8px;
+        color: #f8fafc;
+        selection-background-color: #3b82f6;
+    }
+
+    #TelemetryDashClass QPushButton {
+        width: 80px;
+        height: 80px;
+        border-radius: 18px;
+        border: 3px solid #3b82f6;
+        background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                    stop: 0 #1e40af, stop: 0.5 #3b82f6, stop: 1 #1e40af);
+        color: #ffffff;
+        font: bold 11pt "Segoe UI", sans-serif;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    }
+
+        #TelemetryDashClass QPushButton:disabled {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0 #475569, stop: 1 #64748b);
+            border-color: #64748b;
+            color: #94a3b8;
+        }
+
+        #TelemetryDashClass QPushButton:hover {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0 #2563eb, stop: 0.5 #60a5fa, stop: 1 #2563eb);
+            border-color: #60a5fa;
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.5);
+            transform: scale(1.02);
+        }
+
+        #TelemetryDashClass QPushButton:pressed {
+            background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                        stop: 0 #1d4ed8, stop: 1 #1e40af);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+    #TelemetryDashClass QScrollBar:vertical {
+        border: 1px solid #475569;
+        background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #1e293b, stop: 1 #334155);
+        width: 12px;
+        border-radius: 6px;
+    }
+
+    #TelemetryDashClass QScrollBar::handle:vertical {
+        background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #3b82f6, stop: 1 #60a5fa);
+        min-height: 25px;
+        border-radius: 6px;
+        border: 1px solid #1e40af;
+    }
+
+    #TelemetryDashClass QScrollBar::handle:vertical:hover {
+        background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,
+                    stop: 0 #60a5fa, stop: 1 #93c5fd);
+        box-shadow: 0 0 5px rgba(96, 165, 250, 0.4);
+    }
+
+    #TelemetryDashClass QScrollBar::add-line:vertical,
+    #TelemetryDashClass QScrollBar::sub-line:vertical {
+        height: 0px;
+    }
