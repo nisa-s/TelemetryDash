@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ToDoAppsClass</class>
- <widget class="QWidget" name="ToDoAppsClass">
+ <class>TelemetryDashClass</class>
+ <widget class="QWidget" name="TelemetryDashClass">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>756</width>
-    <height>552</height>
+    <width>720</width>
+    <height>580</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>ToDoApps</string>
+   <string>TelemetryDash - Ground Control Station</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -30,7 +30,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>314</width>
+          <width>200</width>
           <height>20</height>
          </size>
         </property>
@@ -39,7 +39,10 @@
       <item>
        <widget class="QLabel" name="TitleText">
         <property name="text">
-         <string>MISSION ORGANIZER</string>
+         <string>📡 TELEMETRY DASHBOARD</string>
+        </property>
+        <property name="styleSheet">
+         <string>font: bold 16pt 'Verdana';</string>
         </property>
        </widget>
       </item>
@@ -50,7 +53,7 @@
         </property>
         <property name="sizeHint" stdset="0">
          <size>
-          <width>313</width>
+          <width>200</width>
           <height>20</height>
          </size>
         </property>
@@ -67,107 +70,6 @@
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QFrame" name="AddToDoList">
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QFrame" name="AddLeft">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QLabel" name="NewTaskLineEdit">
-              <property name="text">
-               <string>add new task</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="NewTaskText">
-              <property name="placeholderText">
-               <string>LETS GOOOOOOOOOO!!!</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="NewDateText">
-              <property name="text">
-               <string>date created</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QFrame" name="AddRight">
-           <property name="frameShape">
-            <enum>QFrame::Shape::StyledPanel</enum>
-           </property>
-           <property name="frameShadow">
-            <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <layout class="QVBoxLayout" name="verticalLayout_4">
-            <item>
-             <widget class="QPushButton" name="AddNewBtn">
-              <property name="text">
-               <string>add</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QScrollArea" name="AllNewTasks">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
-        </property>
-        <widget class="QWidget" name="AllNewTasksContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>708</width>
-           <height>316</height>
-          </rect>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <spacer name="verticalSpacer">
-            <property name="orientation">
-             <enum>Qt::Orientation::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>288</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
     </widget>
    </item>
   </layout>

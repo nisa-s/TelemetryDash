@@ -1,133 +1,202 @@
 #include "TelemetryDash.h"
+#include <QFile>
+#include <QDateTime>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGroupBox>
+#include <QPushButton>
 
-TelemetryDash::TelemetryDash(QWidget* parent) : QWidget(parent) {
-    ui.setupUi(this);
+TelemetryDash::TelemetryDash(QWidget* parent)
+    : QWidget(parent)
+{
+    //ui.setupUi(this);
+    
+    serialManager = new SerialManager(this);
+    
+    setupUI();
     initStylesheet();
-
-    locationEdit = new QLineEdit(this);
-    locationEdit->setPlaceholderText("📍 Enter location");
-    locationEdit->setGeometry(40, 180, 680, 40);
-
-    priorityCombo = new QComboBox(this);
-    priorityCombo->addItems({"🔴 High", "🟡 Medium", "🟢 Low"});
-    priorityCombo->setCurrentIndex(1);
-    priorityCombo->setGeometry(40, 230, 330, 40);
-
-    categoryCombo = new QComboBox(this);
-    categoryCombo->addItems({"💼 Work", "🏠 Personal", "🛒 Shopping", "🚗 Travel"});
-    categoryCombo->setGeometry(390, 230, 330, 40);
-
-    ui.AddNewBtn->setGeometry(ui.AddNewBtn->x(), 290, ui.AddNewBtn->width(), ui.AddNewBtn->height());
-
-
-    connect(ui.AddNewBtn, SIGNAL(clicked()), this, SLOT(SlotAddNewTask()));
-
-    ui.NewTaskLineEdit->setText("Today, I want to...");
-    ui.NewDateText->setText(QDate::currentDate().toString());
+    
+    connect(serialManager, &SerialManager::dataReceived,
+            this, &TelemetryDash::onDataReceived);
+    
+    connect(serialManager, &SerialManager::connectionStatusChanged,
+            this, &TelemetryDash::onConnectionStatusChanged);
+    
+    connect(serialManager, &SerialManager::errorOccurred,
+            this, &TelemetryDash::onErrorOccurred);
+    
+    portCombo->addItems(serialManager->getAvailablePorts());
 }
 
-void TelemetryDash::initStylesheet() {
+TelemetryDash::~TelemetryDash()
+{
+    serialManager->disconnectPort();
+}
 
+void TelemetryDash::initStylesheet()
+{
     QFile style("style_Generic.css");
-    bool ok = style.open(QFile::ReadOnly);
-    if(ok) {
+    if(style.open(QFile::ReadOnly)) {
         QString s = QString::fromLatin1(style.readAll());
         setStyleSheet(s);
     }
 }
 
+void TelemetryDash::setupUI()
+{
+    portCombo = new QComboBox(this);
+    portCombo->setGeometry(40, 80, 200, 35);
+    
+    baudCombo = new QComboBox(this);
+    baudCombo->addItems({"9600", "115200", "230400", "460800"});
+    baudCombo->setCurrentIndex(1);
+    baudCombo->setGeometry(260, 80, 150, 35);
+    
+    QPushButton* connectBtn = new QPushButton("Connect", this);
+    connectBtn->setGeometry(430, 80, 120, 35);
+    connect(connectBtn, &QPushButton::clicked, this, &TelemetryDash::onConnectClicked);
+    
+    QPushButton* refreshBtn = new QPushButton("🔄 Refresh", this);
+    refreshBtn->setGeometry(570, 80, 100, 35);
+    connect(refreshBtn, &QPushButton::clicked, [this]() {
+        portCombo->clear();
+        portCombo->addItems(serialManager->getAvailablePorts());
+    });
+    
+    statusLabel = new QLabel("Status: Disconnected", this);
+    statusLabel->setGeometry(40, 130, 630, 25);
+    statusLabel->setStyleSheet("font-weight: bold; color: red;");
+    
+    QLabel* batteryLabel = new QLabel("🔋 Battery:", this);
+    batteryLabel->setGeometry(40, 170, 100, 30);
+    batteryLabel->setStyleSheet("font: bold 11pt 'Verdana';");
+    
+    batteryBar = new QProgressBar(this);
+    batteryBar->setGeometry(150, 170, 520, 30);
+    batteryBar->setRange(0, 100);
+    batteryBar->setValue(0);
+    batteryBar->setFormat("%v%");
+    
+    QLabel* altLabel = new QLabel("📏 Altitude (m):", this);
+    altLabel->setGeometry(40, 220, 150, 30);
+    altLabel->setStyleSheet("font: bold 11pt 'Verdana';");
+    
+    altitudeLCD = new QLCDNumber(this);
+    altitudeLCD->setGeometry(200, 220, 150, 50);
+    altitudeLCD->setSegmentStyle(QLCDNumber::Flat);
+    altitudeLCD->display(0);
+    
+    QLabel* spdLabel = new QLabel("🚀 Speed (m/s):", this);
+    spdLabel->setGeometry(400, 220, 150, 30);
+    spdLabel->setStyleSheet("font: bold 11pt 'Verdana';");
+    
+    speedLCD = new QLCDNumber(this);
+    speedLCD->setGeometry(520, 220, 150, 50);
+    speedLCD->setSegmentStyle(QLCDNumber::Flat);
+    speedLCD->display(0);
+    
+    QLabel* hdgLabel = new QLabel("🧭 Heading:", this);
+    hdgLabel->setGeometry(40, 290, 150, 30);
+    hdgLabel->setStyleSheet("font: bold 11pt 'Verdana';");
+    
+    headingLabel = new QLabel("---°", this);
+    headingLabel->setGeometry(200, 290, 100, 30);
+    headingLabel->setStyleSheet("font: bold 14pt 'Verdana'; color: blue;");
+    
+    QLabel* logLabel = new QLabel("📜 Telemetry Log:", this);
+    logLabel->setGeometry(40, 340, 200, 25);
+    logLabel->setStyleSheet("font: bold 10pt 'Verdana';");
+    
+    QPushButton* clearLogBtn = new QPushButton("Clear Log", this);
+    clearLogBtn->setGeometry(570, 340, 100, 25);
+    connect(clearLogBtn, &QPushButton::clicked, this, &TelemetryDash::onClearLogClicked);
+    
+    logList = new QListWidget(this);
+    logList->setGeometry(40, 375, 630, 150);
+}
 
-void TelemetryDash::SlotAddNewTask() {
-    QString taskName = ui.NewTaskLineEdit->text();
-
-    if(taskName == "Today, I want to..." || taskName.isEmpty()) {
-        taskName = ui.NewTaskText->text();
-        if(taskName.isEmpty() || taskName == "LETS GOOOOOOOOOO!!!") {
-            taskName = "New Task";
+void TelemetryDash::onConnectClicked()
+{
+    if (serialManager->isConnected()) {
+        serialManager->disconnectPort();
+    } else {
+        QString port = portCombo->currentText();
+        int baudRate = baudCombo->currentText().toInt();
+        
+        if (!port.isEmpty()) {
+            serialManager->connectToPort(port, baudRate);
         }
     }
-
-    QString location = locationEdit->text();
-    if(location.isEmpty()) location = "No location";
-
-    QString priority = priorityCombo->currentText();
-    QString category = categoryCombo->currentText();
-    QString date = QDate::currentDate().toString();
-
-    createNewTask(taskName, location, priority, category, date);
-
-    ui.NewTaskLineEdit->setText("Today, I want to...");
-    ui.NewTaskText->clear();
-    ui.NewTaskText->setPlaceholderText("LETS GOOOOOOOOOO!!!");
-    locationEdit->clear();
 }
 
-void TelemetryDash::createNewTask(QString taskName, QString location, QString priority, QString category, QString date) {
+void TelemetryDash::onDataReceived(const QString &data)
+{
+    QString timestamp = QDateTime::currentDateTime().toString("hh:mm:ss");
+    logList->addItem("[" + timestamp + "] " + data);
+    logList->scrollToBottom();
+    
+    parseAndDisplayTelemetry(data);
+}
 
-
-    QVBoxLayout* vMainLayout = qobject_cast<QVBoxLayout*>(ui.AllNewTasksContents->layout());
-    QFrame* Hframe = new QFrame();
-    Hframe->setFrameStyle(QFrame::StyledPanel);
-    QHBoxLayout* newTask = new QHBoxLayout(Hframe);
-    Hframe->setLayout(newTask);
-    QFrame* Vframe = new QFrame();
-    QVBoxLayout* taskDetails = new QVBoxLayout(Vframe);
-    Vframe->setLayout(taskDetails);
-
-    QLabel* titlelabel = new QLabel(tr("📋 Task #%1").arg(vMainLayout->count()));
-    taskDetails->addWidget(titlelabel);
-
-    QLabel* tasklabel = new QLabel("🎯 " + taskName);
-    taskDetails->addWidget(tasklabel);
-
-    QLabel* locationlabel = new QLabel("📍 " + location);
-    taskDetails->addWidget(locationlabel);
-
-    QLabel* prioritylabel = new QLabel(priority);
-    taskDetails->addWidget(prioritylabel);
-
-    QLabel* categorylabel = new QLabel(category);
-    taskDetails->addWidget(categorylabel);
-
-    QLabel* datelabel = new QLabel("📅 " + date);
-    taskDetails->addWidget(datelabel);
-    newTask->insertWidget(0, Vframe);
-    QSpacerItem* spacer = new QSpacerItem(100, 100, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
-    newTask->insertSpacerItem(1, spacer);
-
-    QPushButton* deleteBtn = new QPushButton("Delete");
-    newTask->insertWidget(2, deleteBtn);
-    deleteBtn->setProperty("CurrentTask", QVariant(QVariant::fromValue<QFrame*>(Hframe)));
-
-    vMainLayout->insertWidget(vMainLayout->count() - 1, Hframe);
-    connect(deleteBtn, SIGNAL(clicked()), this, SLOT(SlotDeleteTask()));
-
-    {
-        QVector<QString> colors = { "rgba(66, 165, 245,1.0)", "rgba(41, 182, 246,1.0)", "rgba(38, 198, 218,1.0)", "rgba(38, 166, 154,1.0)", "rgba(102, 187, 106,1.0)", "rgba(156, 204, 101,1.0)", "rgba(212, 225, 87,1.0)", "rgba(255, 238, 88,1.0)", "rgba(255, 202, 40,1.0)", "rgba(255, 167, 38,1.0)" };
-        int randomVal = (((rand() % 50) % 100) % (colors.size() - 1));
-
-        Hframe->setObjectName("NewTask");
-        Hframe->setStyleSheet("#NewTask { border-radius: 10px; border: 1px solid black; background-color: " + colors[randomVal] + "; }");
-
-        tasklabel->setObjectName("TaskName");
-        tasklabel->setStyleSheet("#TaskName { font: bold 11pt black 'Verdana'; }");
-
-        deleteBtn->setObjectName("DeleteBtn");
-        deleteBtn->setStyleSheet("#DeleteBtn { color: white; background-color: #ff2264; border-color: #b91043; }  #DeleteBtn:hover{ background-color: #b91043; border-color: #ff2264; }");
+void TelemetryDash::parseAndDisplayTelemetry(const QString &data)
+{
+    QStringList parts = data.split(',');
+    
+    for (const QString &part : parts) {
+        QStringList keyValue = part.split(':');
+        if (keyValue.size() == 2) {
+            QString key = keyValue[0].trimmed();
+            QString value = keyValue[1].trimmed();
+            
+            if (key == "ALT") {
+                altitudeLCD->display(value.toInt());
+            }
+            else if (key == "BAT") {
+                int battery = value.toInt();
+                batteryBar->setValue(battery);
+                
+                if (battery > 50) {
+                    batteryBar->setStyleSheet("QProgressBar::chunk { background-color: #4CAF50; }");
+                } else if (battery > 20) {
+                    batteryBar->setStyleSheet("QProgressBar::chunk { background-color: #FFC107; }");
+                } else {
+                    batteryBar->setStyleSheet("QProgressBar::chunk { background-color: #F44336; }");
+                }
+            }
+            else if (key == "SPD") {
+                speedLCD->display(value.toDouble());
+            }
+            else if (key == "HDG") {
+                headingLabel->setText(value + "°");
+            }
+        }
     }
-
 }
 
-
-void TelemetryDash::SlotDeleteTask() {
-    QPushButton* fromButton = (QPushButton*)sender();
-
-    QVariant var;
-    var = fromButton->property("CurrentTask");
-    QFrame* taskHBox = qvariant_cast<QFrame*>(var);
-
-    taskHBox->deleteLater();
-    delete taskHBox;
-
+void TelemetryDash::onConnectionStatusChanged(bool connected)
+{
+    if (connected) {
+        statusLabel->setText("Status: ✅ Connected");
+        statusLabel->setStyleSheet("font-weight: bold; color: green;");
+        
+        QPushButton* btn = findChild<QPushButton*>();
+        if (btn) btn->setText("Disconnect");
+    } else {
+        statusLabel->setText("Status: ❌ Disconnected");
+        statusLabel->setStyleSheet("font-weight: bold; color: red;");
+        
+        QPushButton* btn = findChild<QPushButton*>();
+        if (btn) btn->setText("Connect");
+    }
 }
 
+void TelemetryDash::onErrorOccurred(const QString &errorMsg)
+{
+    logList->addItem("⚠️ ERROR: " + errorMsg);
+    logList->scrollToBottom();
+}
+
+void TelemetryDash::onClearLogClicked()
+{
+    logList->clear();
+}

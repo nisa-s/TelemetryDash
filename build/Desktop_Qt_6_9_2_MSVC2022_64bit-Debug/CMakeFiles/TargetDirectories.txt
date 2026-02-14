@@ -1,0 +1,5 @@
+C:/Users/NİSANUR/Documents/GitHub/TelemetryDash/build/Desktop_Qt_6_9_2_MSVC2022_64bit-Debug/CMakeFiles/TelemetryDash.dir
+C:/Users/NİSANUR/Documents/GitHub/TelemetryDash/build/Desktop_Qt_6_9_2_MSVC2022_64bit-Debug/CMakeFiles/edit_cache.dir
+C:/Users/NİSANUR/Documents/GitHub/TelemetryDash/build/Desktop_Qt_6_9_2_MSVC2022_64bit-Debug/CMakeFiles/rebuild_cache.dir
+C:/Users/NİSANUR/Documents/GitHub/TelemetryDash/build/Desktop_Qt_6_9_2_MSVC2022_64bit-Debug/CMakeFiles/TelemetryDash_autogen_timestamp_deps.dir
+C:/Users/NİSANUR/Documents/GitHub/TelemetryDash/build/Desktop_Qt_6_9_2_MSVC2022_64bit-Debug/CMakeFiles/TelemetryDash_autogen.dir

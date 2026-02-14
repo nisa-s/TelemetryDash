@@ -2,38 +2,42 @@
 
 #include <QtWidgets/QWidget>
 #include "ui_TelemetryDash.h"
-#include <QDate>
-#include <QDir>
+#include "SerialManager.h"
 #include <QComboBox>
-#include <QLineEdit>
+#include <QProgressBar>
+#include <QLCDNumber>
 #include <QLabel>
+#include <QListWidget>
 
 class TelemetryDash : public QWidget
 {
     Q_OBJECT
 
 public:
-    TelemetryDash(QWidget* parent = Q_NULLPTR);
+    TelemetryDash(QWidget* parent = nullptr);
+    ~TelemetryDash();
 
 private:
     Ui::TelemetryDashClass ui;
-    QComboBox* priorityCombo;
-    QComboBox* categoryCombo;
-    QLineEdit* locationEdit;
-    QLabel* locationLabel;
-    QLabel* priorityLabel;
-    QLabel* categoryLabel;
+    SerialManager* serialManager;
+    
+    QComboBox* portCombo;
+    QComboBox* baudCombo;
+    QProgressBar* batteryBar;
+    QLCDNumber* altitudeLCD;
+    QLCDNumber* speedLCD;
+    QLabel* headingLabel;
+    QLabel* statusLabel;
+    QListWidget* logList;
 
-    void setupLocationFields();
-
-public:
     void initStylesheet();
-    void createNewTask(QString taskName, QString location, QString priority, QString category, QString date);
-public slots:
-    void SlotAddNewTask();
-    void SlotDeleteTask();
+    void setupUI();
+    void parseAndDisplayTelemetry(const QString &data);
 
-signals:
-    void SignalAddNewTask(QString taskName, QString date);
-
+private slots:
+    void onConnectClicked();
+    void onDataReceived(const QString &data);
+    void onConnectionStatusChanged(bool connected);
+    void onErrorOccurred(const QString &errorMsg);
+    void onClearLogClicked();
 };
